@@ -7,6 +7,9 @@ from pygame import *
 import sys
 from os.path import abspath, dirname
 from random import randint, choice
+import math
+
+BOT = True
 
 BASE_PATH = abspath(dirname(__file__))
 FONT_PATH = BASE_PATH + '/fonts/'
@@ -34,16 +37,71 @@ IMAGES = {name: image.load(IMAGE_PATH + '{}.png'.format(name)).convert_alpha()
 
 
 class Ship(sprite.Sprite):
-    def __init__(self):
+    def __init__(self, space):
         sprite.Sprite.__init__(self)
+        self.space = space
         self.image = IMAGES['ship']
         self.rect = self.image.get_rect(topleft=(375, 540))
         self.speed = 5
 
+    def dist(self,x,y):
+        sx = self.rect.x
+        sy = self.rect.y
+        return math.sqrt((sx-x)**2+(sy-y)**2)
+
+    def closest_enemy_rect(self):
+        min_dist = 1000000000
+        ret=0
+        for enemycol in self.space.enemies.enemies:
+            for enemy in enemycol:
+                if enemy is not None:
+                    if enemy.rect is not None:
+                        cdist = self.dist(enemy.rect.x,enemy.rect.y)
+                        if cdist<min_dist:
+                            ret=(enemy.rect)
+        return ret
+
+    def under_blocker(self):
+        ranges=[]
+        for i in range(4):
+            ranges.append(((50+(200*i)+0)-30,(50+(200*i)+(9*10))-20))
+        print(ranges)
+        # for blocker in self.space.blockers:
+        #     if self.rect.x>blocker.rect.x and self.rect.x<(blocker.rect.x+blocker.rect.width):
+        #         # print('under'+str(time.get_ticks()))
+        #         return True
+        # return False
+        for r in ranges:
+            if self.rect.x>r[0] and self.rect.x<r[1]:
+                return True
+        return False
+
     def update(self, keys, *args):
-        if keys[K_LEFT] and self.rect.x > 10:
+        # ship control
+        # print(self.space)
+        btn_left=False
+        btn_right=False
+
+        if BOT:
+            closest = self.closest_enemy_rect()
+            # print(closest)
+            if closest.x>self.rect.x:
+                btn_right=True
+            elif closest.x<self.rect.x:
+                btn_left=True
+
+            if not self.under_blocker():
+                self.space.do_shoot()
+        else:
+            if keys[K_LEFT] and self.rect.x > 10:
+                btn_right = True
+            if keys[K_RIGHT] and self.rect.x < 740:
+                btn_left = True
+            game.screen.blit(self.image, self.rect)
+
+        if btn_left and self.rect.x > 10:
             self.rect.x -= self.speed
-        if keys[K_RIGHT] and self.rect.x < 740:
+        if btn_right and self.rect.x < 740:
             self.rect.x += self.speed
         game.screen.blit(self.image, self.rect)
 
@@ -319,6 +377,7 @@ class SpaceInvaders(object):
         #   ALSA lib pcm.c:7963:(snd_pcm_recover) underrun occurred
         mixer.pre_init(44100, -16, 1, 4096)
         init()
+        self.blockers=[]
         self.caption = display.set_caption('Space Invaders')
         self.screen = SCREEN
         self.background = image.load(IMAGE_PATH + 'background.jpg').convert()
@@ -333,7 +392,7 @@ class SpaceInvaders(object):
         self.enemyPosition = self.enemyPositionStart
 
     def reset(self, score, lives, newGame=False):
-        self.player = Ship()
+        self.player = Ship(self)
         self.playerGroup = sprite.Group(self.player)
         self.explosionsGroup = sprite.Group()
         self.bullets = sprite.Group()
@@ -363,12 +422,15 @@ class SpaceInvaders(object):
 
     def make_blockers(self, number):
         blockerGroup = sprite.Group()
+        blockers=[]
         for row in range(4):
             for column in range(9):
                 blocker = Blocker(10, GREEN, row, column)
                 blocker.rect.x = 50 + (200 * number) + (column * blocker.width)
                 blocker.rect.y = 450 + (row * blocker.height)
+                blockers.append(blocker)
                 blockerGroup.add(blocker)
+        self.blockers.extend(blockers)
         return blockerGroup
 
     def reset_lives_sprites(self):
@@ -432,32 +494,40 @@ class SpaceInvaders(object):
         # type: (pygame.event.EventType) -> bool
         return evt.type == QUIT or (evt.type == KEYUP and evt.key == K_ESCAPE)
 
+
+    def do_shoot(self):
+        if len(self.bullets) == 0 and self.shipAlive:
+            if self.score < 1000:
+                bullet = Bullet(self.player.rect.x + 23,
+                                self.player.rect.y + 5, -1,
+                                15, 'laser', 'center')
+                self.bullets.add(bullet)
+                self.allSprites.add(self.bullets)
+                self.sounds['shoot'].play()
+            else:
+                leftbullet = Bullet(self.player.rect.x + 8,
+                                    self.player.rect.y + 5, -1,
+                                    15, 'laser', 'left')
+                rightbullet = Bullet(self.player.rect.x + 38,
+                                     self.player.rect.y + 5, -1,
+                                     15, 'laser', 'right')
+                self.bullets.add(leftbullet)
+                self.bullets.add(rightbullet)
+                self.allSprites.add(self.bullets)
+                self.sounds['shoot2'].play()
+
     def check_input(self):
+        if BOT: return
         self.keys = key.get_pressed()
+        space_flag = False
         for e in event.get():
             if self.should_exit(e):
                 sys.exit()
             if e.type == KEYDOWN:
                 if e.key == K_SPACE:
-                    if len(self.bullets) == 0 and self.shipAlive:
-                        if self.score < 1000:
-                            bullet = Bullet(self.player.rect.x + 23,
-                                            self.player.rect.y + 5, -1,
-                                            15, 'laser', 'center')
-                            self.bullets.add(bullet)
-                            self.allSprites.add(self.bullets)
-                            self.sounds['shoot'].play()
-                        else:
-                            leftbullet = Bullet(self.player.rect.x + 8,
-                                                self.player.rect.y + 5, -1,
-                                                15, 'laser', 'left')
-                            rightbullet = Bullet(self.player.rect.x + 38,
-                                                 self.player.rect.y + 5, -1,
-                                                 15, 'laser', 'right')
-                            self.bullets.add(leftbullet)
-                            self.bullets.add(rightbullet)
-                            self.allSprites.add(self.bullets)
-                            self.sounds['shoot2'].play()
+                    space_flag = True
+        if space_flag:
+            self.do_shoot()
 
     def make_enemies(self):
         enemies = EnemiesGroup(10, 5)
@@ -611,7 +681,7 @@ class SpaceInvaders(object):
 
     def create_new_ship(self, createShip, currentTime):
         if createShip and (currentTime - self.shipTimer > 900):
-            self.player = Ship()
+            self.player = Ship(self)
             self.allSprites.add(self.player)
             self.playerGroup.add(self.player)
             self.makeNewShip = False
