@@ -2,8 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="12d073d8-d1ff-4407-89a2-1a5e82d8d8fa" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Space Invaders.exe" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/spaceinvaders.py" beforeDir="false" afterPath="$PROJECT_DIR$/spaceinvaders.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -32,12 +30,12 @@
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="py" value="2115" />
+          <entry key="py" value="2311" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="Python" value="2115" />
+          <entry key="Python" value="2311" />
         </counts>
       </usages-collector>
     </session>
@@ -47,14 +45,14 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/spaceinvaders.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-509">
-              <caret line="66" column="66" selection-start-line="66" selection-start-column="66" selection-end-line="66" selection-end-column="66" />
+            <state relative-caret-position="4887">
+              <caret line="450" column="54" lean-forward="true" selection-start-line="450" selection-start-column="54" selection-end-line="450" selection-end-column="54" />
               <folding>
                 <element signature="e#67#87#0" expanded="true" />
-                <marker date="1538471409044" expanded="true" signature="1199:1301" ph="..." />
-                <marker date="1538471409044" expanded="true" signature="1752:1761" ph="..." />
-                <marker date="1538471409044" expanded="true" signature="1752:2276" ph="..." />
-                <marker date="1538471409044" expanded="true" signature="18437:18442" ph="..." />
+                <marker date="1538472719014" expanded="true" signature="1199:1301" ph="..." />
+                <marker date="1538472719014" expanded="true" signature="1834:1843" ph="..." />
+                <marker date="1538472719014" expanded="true" signature="1834:2105" ph="..." />
+                <marker date="1538472719014" expanded="true" signature="18388:18393" ph="..." />
               </folding>
             </state>
           </provider>
@@ -70,6 +68,7 @@
       <find>under_</find>
       <find>blocker</find>
       <find>allblockers</find>
+      <find>blockers</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -186,15 +185,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/spaceinvaders.py</url>
-          <line>69</line>
-          <option name="timeStamp" value="6" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
     <watches-manager>
       <configuration name="PythonConfigurationType">
         <watch expression="self.space.enemies.enemies[0][0].rect" language="Python" />
@@ -267,14 +257,14 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/spaceinvaders.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-509">
-          <caret line="66" column="66" selection-start-line="66" selection-start-column="66" selection-end-line="66" selection-end-column="66" />
+        <state relative-caret-position="4887">
+          <caret line="450" column="54" lean-forward="true" selection-start-line="450" selection-start-column="54" selection-end-line="450" selection-end-column="54" />
           <folding>
             <element signature="e#67#87#0" expanded="true" />
-            <marker date="1538471409044" expanded="true" signature="1199:1301" ph="..." />
-            <marker date="1538471409044" expanded="true" signature="1752:1761" ph="..." />
-            <marker date="1538471409044" expanded="true" signature="1752:2276" ph="..." />
-            <marker date="1538471409044" expanded="true" signature="18437:18442" ph="..." />
+            <marker date="1538472719014" expanded="true" signature="1199:1301" ph="..." />
+            <marker date="1538472719014" expanded="true" signature="1834:1843" ph="..." />
+            <marker date="1538472719014" expanded="true" signature="1834:2105" ph="..." />
+            <marker date="1538472719014" expanded="true" signature="18388:18393" ph="..." />
           </folding>
         </state>
       </provider>

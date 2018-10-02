@@ -61,16 +61,17 @@ class Ship(sprite.Sprite):
                             ret=(enemy.rect)
         return ret
 
+    def best_dir(self):
+        left_score=0
+        right_score=0
+
+        pass
+
     def under_blocker(self):
         ranges=[]
         for i in range(4):
             ranges.append(((50+(200*i)+0)-30,(50+(200*i)+(9*10))-20))
         print(ranges)
-        # for blocker in self.space.blockers:
-        #     if self.rect.x>blocker.rect.x and self.rect.x<(blocker.rect.x+blocker.rect.width):
-        #         # print('under'+str(time.get_ticks()))
-        #         return True
-        # return False
         for r in ranges:
             if self.rect.x>r[0] and self.rect.x<r[1]:
                 return True
@@ -89,6 +90,9 @@ class Ship(sprite.Sprite):
                 btn_right=True
             elif closest.x<self.rect.x:
                 btn_left=True
+
+            if abs(closest.x-self.rect.x)<self.speed:
+                self.rect.x=closest.x
 
             if not self.under_blocker():
                 self.space.do_shoot()
@@ -377,7 +381,7 @@ class SpaceInvaders(object):
         #   ALSA lib pcm.c:7963:(snd_pcm_recover) underrun occurred
         mixer.pre_init(44100, -16, 1, 4096)
         init()
-        self.blockers=[]
+        # self.blockers=[]
         self.caption = display.set_caption('Space Invaders')
         self.screen = SCREEN
         self.background = image.load(IMAGE_PATH + 'background.jpg').convert()
@@ -399,6 +403,7 @@ class SpaceInvaders(object):
         self.mysteryShip = Mystery()
         self.mysteryGroup = sprite.Group(self.mysteryShip)
         self.enemyBullets = sprite.Group()
+        self.ebullets=[]
         self.reset_lives(lives)
         self.enemyPosition = self.enemyPositionStart
         self.make_enemies()
@@ -430,7 +435,7 @@ class SpaceInvaders(object):
                 blocker.rect.y = 450 + (row * blocker.height)
                 blockers.append(blocker)
                 blockerGroup.add(blocker)
-        self.blockers.extend(blockers)
+        # self.blockers.extend(blockers)
         return blockerGroup
 
     def reset_lives_sprites(self):
